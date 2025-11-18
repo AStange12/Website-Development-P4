@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yippee! - Your Digital Life Starts Here</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="header-container">
+            <!-- Logo Section -->
+            <div class="logo-section">
+                <h1 class="logo">YIPPEE!</h1>
+            </div>
+            
+            <!-- Title Section -->
+            <div class="title-section">
+                <h2 class="company-title">Aaron & Kevin Inc.</h2>
+            </div>
+            
+            <!-- Login Section -->
+            <div class="login-section">
+                <button class="login-btn" id="loginBtn">Login</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <div class="main-container">
+        <!-- Left Sidebar (1/3) -->
+        <aside class="left-sidebar">
+            <!-- Site Introduction -->
+            <section class="intro-section">
+                <h3>Welcome to Yippee!</h3>
+                <p>Your one-stop destination for all digital services. Connect, share, and explore with our growing family of web applications.</p>
+            </section>
+
+            <!-- Services Section -->
+            <section class="services-section">
+                <h3>Our Services</h3>
+                
+                <!-- Email Service -->
+                <div class="service-item featured">
+                    <h4>📧 Yippee! Mail</h4>
+                    <p>Stay connected with friends and family through our secure email platform.</p>
+                    <a href="#" class="service-link primary">Access Mail</a>
+                </div>
+
+                <!-- FotoFan Service -->
+                <div class="service-item featured">
+                    <h4>📸 FotoFan</h4>
+                    <p>Store, organize, and share your precious memories in the cloud. Create stunning slideshows and discover your photo collection like never before.</p>
+                    <a href="FotoFan.html" class="service-link primary">Explore FotoFan</a>
+                </div>
+            </section>
+        </aside>
+
+        <!-- Right Content Area (2/3) -->
+        <main class="main-content">
+            <!-- News Section -->
+            <section class="news-section">
+                <h2>Yippee! News & Updates</h2>
+                
+                <!-- Featured Story -->
+                <article class="featured-story">
+                    <h3>🌟 Introducing FotoFan: Your Personal Photo Cloud</h3>
+                    <div class="story-meta">
+                        <span class="date">November 17, 2025</span>
+                        <span class="category">Product Launch</span>
+                    </div>
+                    <p>We're excited to announce the launch of FotoFan, our revolutionary cloud-based photo management service. Upload, organize, and share your memories with advanced search capabilities and stunning slideshow features.</p>
+                    <a href="#" class="read-more">Read More →</a>
+                </article>
+
+                <!-- News Grid -->
+                <div class="news-grid">
+                    <article class="news-item">
+                        <h4>💡 Tech Innovation</h4>
+                        <h5>Enhanced Security Features Rolling Out</h5>
+                        <p>New two-factor authentication and advanced encryption now available across all Yippee! services.</p>
+                        <span class="news-date">Nov 15, 2025</span>
+                    </article>
+
+
+                    <article class="news-item">
+                        <h4>👥 Community</h4>
+                        <h5>User Milestone: 1 Million Photos Stored</h5>
+                        <p>FotoFan users have collectively uploaded over 1 million precious memories to our platform!</p>
+                        <span class="news-date">Nov 10, 2025</span>
+                    </article>
+
+                    <article class="news-item">
+                        <h4>🔧 Updates</h4>
+                        <h5>Mail Service Performance Improvements</h5>
+                        <p>Experience faster loading times and improved search functionality in Yippee! Mail.</p>
+                        <span class="news-date">Nov 8, 2025</span>
+                    </article>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 Aaron & Kevin Inc. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+    </footer>
+
+    <!-- Login Modal (will be styled with CSS) -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Login to Yippee!</h3>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="submit-btn">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
