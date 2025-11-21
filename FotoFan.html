@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FotoFan - Your Photo Cloud | Yippee!</title>
+    <link rel="stylesheet" href="css/fotofan.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="header-container">
+            <!-- Logo/Home Link -->
+            <div class="logo-section">
+                <a href="index.html" class="home-link">
+                    <h1 class="logo">YIPPEE!</h1>
+                </a>
+            </div>
+            
+            <!-- App Title -->
+            <div class="title-section">
+                <h2 class="app-title">📸 FotoFan</h2>
+                <p class="welcome-user">Welcome back, <span id="username">User</span>!</p>
+            </div>
+            
+            <!-- Controls Section -->
+            <div class="controls-section">
+                <button class="logout-btn" id="logoutBtn">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Application Container -->
+    <div class="app-container">
+        <!-- Left Sidebar - Controls & Filters -->
+        <aside class="sidebar">
+            <!-- Search Section -->
+            <section class="search-section">
+                <h3>🔍 Search Photos</h3>
+                
+                <div class="search-group">
+                    <label for="filenameSearch">File Name:</label>
+                    <input type="text" id="filenameSearch" placeholder="Enter filename..." list="filenameList">
+                    <datalist id="filenameList"></datalist>
+                </div>
+
+                <div class="search-group">
+                    <label for="yearSearch">Year:</label>
+                    <input type="text" id="yearSearch" placeholder="Enter year..." list="yearList">
+                    <datalist id="yearList"></datalist>
+                </div>
+
+                <div class="search-group">
+                    <label for="countrySearch">Country:</label>
+                    <input type="text" id="countrySearch" placeholder="Enter country..." list="countryList">
+                    <datalist id="countryList"></datalist>
+                </div>
+
+                <div class="search-group">
+                    <label for="stateSearch">State:</label>
+                    <input type="text" id="stateSearch" placeholder="Enter state..." list="stateList">
+                    <datalist id="stateList"></datalist>
+                </div>
+
+                <div class="search-buttons">
+                    <button id="searchBtn" class="search-btn">Search</button>
+                    <button id="clearSearch" class="clear-btn">Clear All</button>
+                </div>
+            </section>
+
+            <!-- Upload Section -->
+            <section class="upload-section">
+                <h3>📤 Upload Photos</h3>
+                <button class="upload-btn-sidebar" id="uploadBtnSidebar">Upload Photos</button>
+                <p class="upload-note">Add new photos to your collection</p>
+            </section>
+
+            <!-- Slideshow Controls -->
+            <section class="slideshow-section">
+                <h3>🎬 Slideshow</h3>
+                <button id="startSlideshow" class="slideshow-btn">Start Slideshow</button>
+                <button id="stopSlideshow" class="slideshow-btn" style="display: none;">Stop Slideshow</button>
+                <div class="slideshow-controls" style="display: none;">
+                    <label for="slideSpeed">Speed:</label>
+                    <select id="slideSpeed">
+                        <option value="3000">Slow (3s)</option>
+                        <option value="2000" selected>Medium (2s)</option>
+                        <option value="1000">Fast (1s)</option>
+                    </select>
+                </div>
+            </section>
+        </aside>
+
+        <!-- Photo Viewer -->
+        <section class="photo-viewer">
+                <div class="main-photo-container">
+                    <img id="mainPhoto" src="" alt="" class="main-photo" style="display: none;">
+                    <div class="photo-placeholder" id="photoPlaceholder">
+                        <div class="placeholder-content">
+                            <h3>📸 Welcome to FotoFan!</h3>
+                            <p>Select a thumbnail to view your photos in high resolution</p>
+                            <div class="placeholder-icon">🖼️</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Photo Info -->
+                <div class="photo-info" id="photoInfo" style="display: none;">
+                    <h4 id="photoTitle">Photo Title</h4>
+                    <div class="photo-metadata">
+                        <span class="meta-item"><strong>Year:</strong> <span id="photoYear">-</span></span>
+                        <span class="meta-item"><strong>Location:</strong> <span id="photoLocation">-</span></span>
+                        <span class="meta-item"><strong>Description:</strong> <span id="photoDescription">-</span></span>
+                    </div>
+                </div>
+
+                <!-- Navigation Arrows -->
+                <button class="nav-arrow prev-arrow" id="prevPhoto" style="display: none;">❮</button>
+                <button class="nav-arrow next-arrow" id="nextPhoto" style="display: none;">❯</button>
+        </section>
+
+        <!-- Thumbnail Gallery -->
+        <section class="thumbnail-gallery">
+                <div class="gallery-header">
+                    <h3 id="galleryTitle">📷 Your Photo Collection</h3>
+                    <div class="gallery-stats">
+                        <span id="photoCount">0 photos</span>
+                        <span class="loading" id="loadingIndicator" style="display: none;">Loading...</span>
+                    </div>
+                </div>
+                
+                <div class="thumbnails-container" id="thumbnailsContainer">
+                    <!-- Thumbnails will be loaded dynamically here -->
+                    <div class="no-photos" id="noPhotos">
+                        <p>No photos found. Try adjusting your search or filters.</p>
+                    </div>
+                </div>
+                
+                <!-- Pagination -->
+                <div class="pagination" id="pagination" style="display: none;">
+                    <button id="prevPage" class="page-btn">← Previous</button>
+                    <span id="pageInfo">Page 1 of 1</span>
+                    <button id="nextPage" class="page-btn">Next →</button>
+                </div>
+        </section>
+    </div>
+
+    <!-- Upload Modal (Non-functional) -->
+    <div id="uploadModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>📤 Upload Photos</h3>
+            <div class="upload-info">
+                <p><strong>This feature is currently under development by another team.</strong></p>
+                <p>Soon you'll be able to:</p>
+                <ul>
+                    <li>Upload multiple photos at once</li>
+                    <li>Add metadata and descriptions</li>
+                    <li>Organize into albums</li>
+                    <li>Auto-tag with AI recognition</li>
+                </ul>
+                <p><em>Check back soon for updates!</em></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slideshow Modal -->
+    <div id="slideshowModal" class="slideshow-modal" style="display: none;">
+        <div class="slideshow-content">
+            <button class="close-slideshow" id="closeSlideshowBtn">&times;</button>
+            <img id="slideshowImage" src="" alt="Slideshow Image" class="slideshow-image">
+            <div class="slideshow-info">
+                <h4 id="slideshowTitle"></h4>
+                <p id="slideshowMeta"></p>
+            </div>
+            <div class="slideshow-progress">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/fotofan.js"></script>
+</body>
+</html>
