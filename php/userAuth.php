@@ -23,7 +23,7 @@
 			// hash value of the given password
 			if (password_verify ($plainPassword, $hashedPassword))
 				// it is verified!!
-				echo "Enter, $user_Name!";
+				echo "Enter";
 			else 
 				echo "Password invalid!";
 		}

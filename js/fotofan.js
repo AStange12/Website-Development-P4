@@ -3,6 +3,7 @@
 
 $(document).ready(function() {
     // Sample photo data (simulating database)
+   /*
     const samplePhotos = {
         'Joe': [
             {
@@ -98,7 +99,7 @@ $(document).ready(function() {
                 description: 'Peaceful forest trail'
             }
         ]
-    };
+    };*/
 
     // Application state
     let currentUser = '';
@@ -144,21 +145,52 @@ $(document).ready(function() {
     // Load user's photos from "database"
     function loadUserPhotos() {
         $('#loadingIndicator').show();
-        
-        // Simulate loading delay
-        setTimeout(() => {
-            currentPhotos = samplePhotos[currentUser] || [];
-            filteredPhotos = [...currentPhotos];
-            displayPhotos();
-            updatePhotoCount();
-            populateSearchOptions();
-            $('#loadingIndicator').hide();
-        }, 500);
+        $.ajax({
+            url: 'php/getPhotos.php',
+            method: 'GET',
+            data: { userName: currentUser },
+            dataType: 'text', // get raw text so we can extract JSON
+            success: function(response) {
+                // Try to extract JSON from the response, even if there is HTML around it
+                let jsonStr = response;
+                // This regex finds the first {...} or [...] block in the response (dotall mode)
+                const match = response.match(/({[\s\S]*})|(\[[\s\S]*\])/);
+                if (match) {
+                    jsonStr = match[0];
+                }
+
+                let data;
+                try {
+                    data = JSON.parse(jsonStr);
+                } catch (e) {
+                    alert('Failed to parse photo data. Server response was not valid JSON.');
+                    $('#loadingIndicator').hide();
+                    return;
+                }
+
+                currentPhotos = data || [];
+                filteredPhotos = [...currentPhotos];
+                displayPhotos();
+                updatePhotoCount();
+                populateSearchOptions();
+                $('#loadingIndicator').hide();
+            },
+            error: function(xhr, status, error) {
+                $('#loadingIndicator').hide();
+                alert('Failed to load photos. Please try again later.');
+                alert(error);
+                alert(xhr.responseText);
+                currentPhotos = [];
+                filteredPhotos = [];
+                displayPhotos();
+                updatePhotoCount();
+            }
+        });
     }
 
     // Populate datalist options based on current photos
     function populateSearchOptions() {
-        const filenames = [...new Set(currentPhotos.map(photo => photo.url.split('/').pop().split('.')[0]))];
+        const filenames = [...new Set(currentPhotos.map(photo => (photo.url || photo.filename || '').split('/').pop().split('.')[0]))];
         const years = [...new Set(currentPhotos.map(photo => photo.year))].sort();
         const countries = [...new Set(currentPhotos.map(photo => photo.country))].sort();
         const states = [...new Set(currentPhotos.map(photo => photo.state).filter(state => state))].sort();
@@ -206,11 +238,12 @@ $(document).ready(function() {
 
         // Create thumbnail elements
         photosToShow.forEach((photo, index) => {
+            const imgPath = photo.url || photo.filename;
             const thumbnail = $(`
-                <img src="${photo.thumbnail}" 
-                     alt="${photo.title}" 
+                <img src="${imgPath}" 
+                     alt="${photo.title || ''}" 
                      class="thumbnail" 
-                     data-photo-id="${photo.id}"
+                     data-photo-id="${photo.id || ''}"
                      data-index="${startIndex + index}">
             `);
             
@@ -240,10 +273,11 @@ $(document).ready(function() {
         
         currentPhotoIndex = index;
         const photo = filteredPhotos[index];
+        const imgPath = photo.url || photo.filename;
         
         // Hide placeholder, show photo with fade effect
         $('#photoPlaceholder').fadeOut(200, function() {
-            $('#mainPhoto').attr('src', photo.url).fadeIn(300);
+            $('#mainPhoto').attr('src', imgPath).fadeIn(300);
             $('#photoInfo').fadeIn(300);
             
             // Update photo information
@@ -294,26 +328,27 @@ $(document).ready(function() {
         const yearSearch = $('#yearSearch').val().toLowerCase();
         const countrySearch = $('#countrySearch').val().toLowerCase();
         const stateSearch = $('#stateSearch').val().toLowerCase();
-        
-        // If all search fields are empty, show all photos
-        if (!filenameSearch && !yearSearch && !countrySearch && !stateSearch) {
-            filteredPhotos = [...currentPhotos];
-        } else {
+
+        // Always reset filteredPhotos before filtering
+        filteredPhotos = [...currentPhotos];
+
+        // Only filter if at least one search field is non-empty
+        if (filenameSearch || yearSearch || countrySearch || stateSearch) {
             filteredPhotos = currentPhotos.filter(photo => {
-                const filename = photo.url.split('/').pop().toLowerCase();
-                const photoYear = photo.year.toLowerCase();
-                const photoCountry = photo.country.toLowerCase();
-                const photoState = photo.state.toLowerCase();
-                
+                const filename = (photo.url || photo.filename || '').split('/').pop().toLowerCase();
+                const photoYear = (photo.year || '').toLowerCase();
+                const photoCountry = (photo.country || '').toLowerCase();
+                const photoState = (photo.state || '').toLowerCase();
+
                 const matchesFilename = !filenameSearch || filename.includes(filenameSearch);
                 const matchesYear = !yearSearch || photoYear.includes(yearSearch);
                 const matchesCountry = !countrySearch || photoCountry.includes(countrySearch);
                 const matchesState = !stateSearch || photoState.includes(stateSearch);
-                
+
                 return matchesFilename && matchesYear && matchesCountry && matchesState;
             });
         }
-        
+
         currentPage = 1;
         displayPhotos();
         updatePhotoCount();
@@ -377,7 +412,8 @@ $(document).ready(function() {
 
     function showSlidePhoto(index) {
         const photo = filteredPhotos[index];
-        $('#slideshowImage').attr('src', photo.url);
+        const imgPath = photo.url || photo.filename;
+        $('#slideshowImage').attr('src', imgPath);
         $('#slideshowTitle').text(photo.title);
         $('#slideshowMeta').text(`${photo.year} • ${getLocationString(photo)}`);
         

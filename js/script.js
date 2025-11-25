@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             success: function(response) {
                 response = response.trim();
-                if (response.startsWith('Enter')) {
+                if (response.includes("Enter")) {
                     // Success! Store login status and redirect to FotoFan
                     sessionStorage.setItem('loggedInUser', username);
                     sessionStorage.setItem('isLoggedIn', 'true');
