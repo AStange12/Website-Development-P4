@@ -7,11 +7,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const loginForm = document.getElementById('loginForm');
     
     // Demo user accounts (hardcoded as specified)
-    const users = {
+    /*const users = {
         'Joe': 'joe123',
         'Jane': 'jane321'
     };
-    
+    */
     // Open modal when login button is clicked
     loginBtn.onclick = function() {
         modal.style.display = 'block';
@@ -36,26 +36,36 @@ document.addEventListener('DOMContentLoaded', function() {
     // Handle form submission
     loginForm.onsubmit = function(event) {
         event.preventDefault(); // Prevent actual form submission
-        
+
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
-        
-        // Validate login credentials
-        if (users[username] && users[username] === password) {
-            // Success! Store login status and redirect to FotoFan
-            sessionStorage.setItem('loggedInUser', username);
-            sessionStorage.setItem('isLoggedIn', 'true');
-            
-            // Show success message briefly
-            alert(`Welcome back, ${username}! Redirecting to FotoFan...`);
-            
-            // Redirect to FotoFan page
-            window.location.href = 'FotoFan.html';
-        } else {
-            // Invalid credentials
-            alert('Invalid username or password. Please try again.\\n\\nDemo accounts:\\n- Joe / joe123\\n- Jane / jane321');
-            clearForm();
-        }
+
+        // jQuery AJAX request to PHP backend for authentication
+        $.ajax({
+            url: 'php/userAuth.php',
+            method: 'GET',
+            data: {
+                userName: username,
+                password: password
+            },
+            success: function(response) {
+                response = response.trim();
+                if (response.startsWith('Enter')) {
+                    // Success! Store login status and redirect to FotoFan
+                    sessionStorage.setItem('loggedInUser', username);
+                    sessionStorage.setItem('isLoggedIn', 'true');
+                    alert(`Welcome back, ${username}! Redirecting to FotoFan...`);
+                    window.location.href = 'FotoFan.html';
+                } else {
+                    // Invalid credentials or user not found
+                    alert(response);
+                    clearForm();
+                }
+            },
+            error: function() {
+                alert('Server error. Please try again later.');
+            }
+        });
     }
     
     // Clear form function
